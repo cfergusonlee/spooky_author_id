@@ -11832,7 +11832,7 @@ $( document ).ready(function(){
 <h1>Spooky Author Identification <a class='tocSkip'></h1>
 <p>By: <a href="https://www.linkedin.com/in/courtneyfergusonlee/"><strong>Courtney Ferguson Lee</strong></a></p>
 <p><img src='https://raw.githubusercontent.com/spacecadet84/spooky_author_id/master/images/authors.png'></p>
-<h1 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h1><p>This notebook tutorial will demonstrate how to use natural language processing to identify authors from text excerpts. It will also serve as my initial entry into Kaggle's natural language contest of the same name. The purpose is not to get to the top of the Kaggle leaderboard, but to help beginners develop their understanding of text learning. The authors include Edgar Allen Poe, HP Lovecraft and Mary Shelley. We'll start by exploring the structure of the data, then clean up any inconsistencies and create a few visualizations before feeding the data into our algorithm.</p>
+<h1 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">&#182;</a></h1><p>This notebook tutorial will demonstrate how to use natural language processing to identify authors from text excerpts. The authors include Edgar Allen Poe, HP Lovecraft and Mary Shelley. It will also serve as my initial entry into Kaggle's natural language contest of the same name. The purpose is not to get to the top of the Kaggle leaderboard, but to help beginners develop their understanding of text learning. We'll start by exploring the structure of the data, then clean up any inconsistencies and create a few visualizations before feeding the data into our algorithm.</p>
 
 </div>
 </div>
@@ -12061,7 +12061,7 @@ memory usage: 459.0+ KB
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Feature-Engineering">Feature Engineering<a class="anchor-link" href="#Feature-Engineering">&#182;</a></h1><p>The unicode characters aren't playing nicely with textblob or nltk. Let's convert them to ascii strings for now. We risk losing information in the form of special characters, but if that becomes an issue we'll come back to this later.</p>
+<h1 id="Feature-Engineering">Feature Engineering<a class="anchor-link" href="#Feature-Engineering">&#182;</a></h1><p>The unicode characters aren't playing nicely with textblob or nltk. Let's convert them to ascii strings for now. We risk losing information from special characters, but if that becomes an issue we'll come back to this later.</p>
 
 </div>
 </div>
@@ -12084,7 +12084,7 @@ memory usage: 459.0+ KB
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Stem-Words">Stem Words<a class="anchor-link" href="#Stem-Words">&#182;</a></h2><p>Our first step will be to convert our words into stem words. Stemming is the process of reducing words into their word stem. It may be helpful to go into detail here. For example, let's say we are trying identify whether an excerpt came from an MLA style guide or a baseball article and our classifier encountered the following words:</p>
+<h2 id="Stem-Words">Stem Words<a class="anchor-link" href="#Stem-Words">&#182;</a></h2><p>Our next step will be to convert our words into stem words. Stemming is the process of reducing words into their word stem. It may be helpful to go into detail here. For example, let's say we are trying identify whether an excerpt came from an MLA style guide or a baseball article and our classifier encountered the following words:</p>
 <ul>
 <li>formater</li>
 <li>formatted</li>
@@ -12152,36 +12152,12 @@ memory usage: 459.0+ KB
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Lemmas">Lemmas<a class="anchor-link" href="#Lemmas">&#182;</a></h2><p>We will also apply lemmatization to our features. Lemmatization is very similar to stemming in that it involves reducing words, but it does so in a more nuanced way. Whereas stemming applies a rather coarse algorithm to chop off the ends of words, lemmatization reduces words properly, taking into account part of speech and inflection.</p>
-<p>Stemming often results in a non-word whereas lemmatization gets to the morphological base of a word. For example, consider the word 'reduced'. Stemming would convert that word to 'reduc', which is not a word. Lemmatizing the verb 'reduced' would result in the base word 'reduce'.</p>
-<p>For our purposes, we will use lemmatization to reduce the number of features in our dataset, but there are other use cases for this technique. Both lemmatization and stemming can be used to improve the accuracy of search algorithms. If a user enters the search terms "code" and "challenges", it would be helpful to include websites that contain the term "coding challenge".</p>
+<h2 id="Lemmas">Lemmas<a class="anchor-link" href="#Lemmas">&#182;</a></h2><p>We will also apply lemmatization to our features. Lemmatization is very similar to stemming in that it involves reducing words, but it does so in a more nuanced way. Whereas stemming applies a coarse algorithm to chop off the ends of words, lemmatization reduces words properly, taking into account part of speech and inflection.</p>
+<p>Stemming often results in a non-word whereas lemmatization gets to the morphological base of a word. For example, consider the word 'reduced'. Stemming would convert that word to 'reduc', which is not a word. Lemmatizing the verb 'reduced' would result in its base word 'reduce'.</p>
+<p>For our purposes, we will use lemmatization to reduce the number of features in our dataset, but there are other use cases for this technique. Both lemmatization and stemming can be used to improve the accuracy of search algorithms. If a user enters the search terms "code" and "challenges", it would be helpful to include websites that contain the phrase "coding challenge".</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">get_wordnet_pos</span><span class="p">(</span><span class="n">treebank_tag</span><span class="p">):</span>
-
-    <span class="k">if</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;J&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">ADJ</span>
-    <span class="k">elif</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;V&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">VERB</span>
-    <span class="k">elif</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">NOUN</span>
-    <span class="k">elif</span> <span class="n">treebank_tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;R&#39;</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">ADV</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">None</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13439,10 +13415,10 @@ Ibr4f8BMEOk551BxAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Modeling">Modeling<a class="anchor-link" href="#Modeling">&#182;</a></h1><p>Now that we have a better understanding of our data structure, we can build our machine learning models. The first step in the process will be to vectorize our features before feeding them into our algorithms. Vectorization is the process of converting a corpus into a sparse matrix of numbers. Every word in the corpus has a unique location within the vector.</p>
-<p>One approach to vectorizing text is through count vectorization. This method transforms each word into a column and transforms each document into a row. Each cell contains a count of the number of times that column's word occurs.</p>
-<p>Another approach is to use term frequency document inverse frequency or TF-IDF for vectorization. Columns still represent words and rows still represent documents, but it goes a step further by measuring how unique a word is across all documents. Each cell in the TF-IDF matrix is a product of how frequently the word occurs in a document by how unique it is in the entire corpus of documents. In this exploration, we will be using TF-IDF for its enhanced discriminating power.</p>
-<p>There are a number of hyperparameters that can be tuned in tfidf, which can be found <a href="http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">here</a>. We will focus on bigrams and unigrams. When tokenizing our documents, we can break them down to individual words like "Frankenstein", "raven" or "octopus", or into phrases like "you know", "down by", or "any day now". There are advantages and disadvantages to each approach, but we will not know which will lead to better accuracy until we implement them. Therefore, we will try both and document our results. It it tempting to use the widest variety of n-grams our processor can handle, but again, more data is not always more helpful. Generating millions of features can actually hurt our accuracy.</p>
+<h1 id="Modeling">Modeling<a class="anchor-link" href="#Modeling">&#182;</a></h1><p>Now that we have a better understanding of our data structure, we can build our machine learning models. We will vectorize our features before feeding them into our algorithms. Vectorization converts a corpus into a sparse matrix of numbers. Every word in the corpus has a unique location within the vector.</p>
+<p>Count vectorization transforms each word into a column and transforms each document into a row. Each cell contains a count of the number of times that column's word occurs. While this method can be useful, we may be more interested in words that are unique to certain documents, as opposed to the most popular words. For this reason, we will be using term frequency document inverse frequency (TF-IDF).</p>
+<p>In TF-IDF vectorization, columns still represent words and rows still represent documents, but it goes a step further by measuring how unique a word is across all documents. Each cell in the TF-IDF matrix is a product of how frequently the word occurs in a document by how unique it is in the entire corpus of documents. In this exploration, we will be using TF-IDF for its enhanced discriminating power.</p>
+<p>There are a number of hyperparameters that can be tuned in tfidf, which can be found <a href="http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html">here</a>. We will focus on bigrams and unigrams. When tokenizing our documents, we can break them down to individual words like "Frankenstein", "raven" or "octopus", or into phrases like "you know", "down by", or "any day now". There are advantages and disadvantages to each approach, but we will not know which will lead to better accuracy until we implement them. It is tempting to just use the widest variety of n-grams our processor can handle, but again, more data is not always more helpful. Generating millions of features can actually hurt our accuracy.</p>
 
 </div>
 </div>
@@ -13452,7 +13428,7 @@ Ibr4f8BMEOk551BxAAAAAElFTkSuQmCC
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Unigram-Vectorization">Unigram Vectorization<a class="anchor-link" href="#Unigram-Vectorization">&#182;</a></h2><p>We'll start with unigrams and try several of the features we engineered earlier on in the analysis. It's not clear whether words, stems, lemmas or a stemmed lemmas will yield the highest accuracy, so we'll try all four in the next coding blocks.</p>
+<h2 id="Unigram-Vectorization">Unigram Vectorization<a class="anchor-link" href="#Unigram-Vectorization">&#182;</a></h2><p>We'll start with unigrams and try several of the features we engineered earlier on in the analysis. It's not clear whether words, stems, lemmas or stemmed lemmas will yield the highest accuracy, so we'll try all four in the next coding blocks.</p>
 
 </div>
 </div>
@@ -15778,7 +15754,7 @@ AAAAFsIxAAAAYCEcAwAAABbCMQAAAGAhHAMAAACW/w8/+IfFdbD66wAAAABJRU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Again, our stemless words came out on top with 85.1% this time. Not bad for the humbly named Naive Bayes approach.</p>
+<p>Again, our stemless words came out on top with 85.1% accuracy this time. Not bad for the humbly named Naive Bayes approach.</p>
 
 </div>
 </div>
